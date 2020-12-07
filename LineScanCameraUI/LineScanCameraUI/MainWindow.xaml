@@ -1,12 +1,54 @@
-﻿<Window x:Class="LineScanCameraUI.MainWindow"
+﻿<hc:Window x:Class="LineScanCameraUI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:hc="https://handyorg.github.io/handycontrol"
+        xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
         xmlns:local="clr-namespace:LineScanCameraUI"
+        xmlns:View="clr-namespace:LineScanCameraUI.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        WindowStartupLocation="CenterScreen"
+        Title="{Binding Version,StringFormat=LineScanCameraUI{0}}" Height="768" Width="1024" Icon="唱片机.ico" Closing="Window_Closing">
+    <hc:Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="View\Dictionary1.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </hc:Window.Resources>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding AppLoadedEventCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="30"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Menu VerticalAlignment="Center">
+            <MenuItem Header="主页" Command="{Binding MenuActionCommand}" CommandParameter="0"></MenuItem>
+            <MenuItem Header="参数" Command="{Binding MenuActionCommand}" CommandParameter="1"></MenuItem>
+        </Menu>
+        <Grid Grid.Row="1">
+            <View:HomePage Visibility="{Binding HomePageVisibility}"></View:HomePage>
+            <View:ParameterPage Visibility="{Binding ParameterPageVisibility,FallbackValue=Collapsed}"></View:ParameterPage>
+        </Grid>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem Margin="1,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">Cam</TextBlock>
+                    <Ellipse Style="{StaticResource EllipseStatusCamera}"></Ellipse>
+                </StackPanel>
+            </StatusBarItem>
+            <StatusBarItem Margin="1,0">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center">PLC</TextBlock>
+                    <Ellipse Style="{StaticResource EllipseStatusPLC}"></Ellipse>
+                </StackPanel>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
-</Window>
+</hc:Window>
