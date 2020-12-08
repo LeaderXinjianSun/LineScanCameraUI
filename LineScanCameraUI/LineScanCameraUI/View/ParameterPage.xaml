@@ -2,7 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"             
              xmlns:local="clr-namespace:LineScanCameraUI.View"
              mc:Ignorable="d" 
              d:DesignHeight="708" d:DesignWidth="1024">
@@ -15,8 +15,16 @@
             <ColumnDefinition></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <GroupBox Header="通信">
-            
+        <GroupBox Header="PLC">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="40" Margin="10,0,0,0">IP</TextBlock>
+                    <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="100" Text="{Binding PLCIP}"></TextBox>
+                    <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="40" Margin="10,0,0,0">Port</TextBlock>
+                    <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="50" Text="{Binding PLCPort}"></TextBox>
+                </StackPanel>
+                <Button Width="50" Style="{StaticResource ButtonPrimary}" Content="保存" HorizontalAlignment="Right" Margin="0,10,40,0" Command="{Binding OperateButtonCommand}" CommandParameter="100"></Button>
+            </StackPanel>
         </GroupBox>
     </Grid>
 </UserControl>

@@ -1,0 +1,267 @@
+﻿<UserControl x:Class="LineScanCameraUI.View.JogPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:local="clr-namespace:LineScanCameraUI.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="708" d:DesignWidth="1024">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="底部载板平台轴">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding GPos2,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        <StackPanel Grid.Row="1">
+                            <hc:Divider Content="点动(JOG)"></hc:Divider>
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button hc:IconElement.Geometry="{StaticResource  LeftGeometry}" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="20"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="20"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                                <Button hc:IconElement.Geometry="{StaticResource  RightGeometry}" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="21"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="21"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2">
+                            <hc:Divider Content="速度"></hc:Divider>
+                            <Slider Width="200" hc:TipElement.Visibility="Visible" TickFrequency="5" hc:TipElement.Placement="Bottom" hc:TipElement.StringFormat="#0.0'%'" Maximum="100" Value="{Binding Axis2SpeedScale}" TickPlacement="Both"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+                <Border Margin="1,0,0,0" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="60">轴2位置1</TextBlock>
+                            <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" Text="{Binding Axis2Pos1}"></TextBox>
+                            <Button Style="{StaticResource ButtonInfo}" Width="40" Content="get" Margin="1" Command="{Binding AxisPosGetButtonCommand}" CommandParameter="20"></Button>
+                            <Button Style="{StaticResource ButtonSuccess}" Width="40" Content="go" Margin="1" Command="{Binding AxisPosGoButtonCommand}" CommandParameter="20"></Button>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="60">轴2位置2</TextBlock>
+                            <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" Text="{Binding Axis2Pos2}"></TextBox>
+                            <Button Style="{StaticResource ButtonInfo}" Width="40" Content="get" Margin="1" Command="{Binding AxisPosGetButtonCommand}" CommandParameter="21"></Button>
+                            <Button Style="{StaticResource ButtonSuccess}" Width="40" Content="go" Margin="1" Command="{Binding AxisPosGoButtonCommand}" CommandParameter="21"></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="相机上下轴" Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding GPos3,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        <StackPanel Grid.Row="1">
+                            <hc:Divider Content="点动(JOG)"></hc:Divider>
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button hc:IconElement.Geometry="{StaticResource  UpGeometry}" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="30"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="30"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                                <Button hc:IconElement.Geometry="{StaticResource  DownGeometry}" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="31"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="31"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2">
+                            <hc:Divider Content="速度"></hc:Divider>
+                            <Slider Width="200" hc:TipElement.Visibility="Visible" TickFrequency="5" hc:TipElement.Placement="Bottom" hc:TipElement.StringFormat="#0.0'%'" Maximum="100" Value="{Binding Axis3SpeedScale}" TickPlacement="Both"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+                <Border Margin="1,0,0,0" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="60">轴3位置1</TextBlock>
+                            <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" Text="{Binding Axis3Pos1}"></TextBox>
+                            <Button Style="{StaticResource ButtonInfo}" Width="40" Content="get" Margin="1" Command="{Binding AxisPosGetButtonCommand}" CommandParameter="30"></Button>
+                            <Button Style="{StaticResource ButtonSuccess}" Width="40" Content="go" Margin="1" Command="{Binding AxisPosGoButtonCommand}" CommandParameter="30"></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="光源上下轴" Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding GPos4,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        <StackPanel Grid.Row="1">
+                            <hc:Divider Content="点动(JOG)"></hc:Divider>
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button hc:IconElement.Geometry="{StaticResource  UpGeometry}" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="40"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="40"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                                <Button hc:IconElement.Geometry="{StaticResource  DownGeometry}" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="41"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="41"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2">
+                            <hc:Divider Content="速度"></hc:Divider>
+                            <Slider Width="200" hc:TipElement.Visibility="Visible" TickFrequency="5" hc:TipElement.Placement="Bottom" hc:TipElement.StringFormat="#0.0'%'" Maximum="100" Value="{Binding Axis4SpeedScale}" TickPlacement="Both"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+                <Border Margin="1,0,0,0" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="60">轴4位置1</TextBlock>
+                            <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" Text="{Binding Axis4Pos1}"></TextBox>
+                            <Button Style="{StaticResource ButtonInfo}" Width="40" Content="get" Margin="1" Command="{Binding AxisPosGetButtonCommand}" CommandParameter="40"></Button>
+                            <Button Style="{StaticResource ButtonSuccess}" Width="40" Content="go" Margin="1" Command="{Binding AxisPosGoButtonCommand}" CommandParameter="40"></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="相机角度轴" Grid.Row="1" Grid.Column="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding GPos9,StringFormat=规划位置: {0:F2} mm}" Width="200" FontSize="18"></TextBlock>
+                        <StackPanel Grid.Row="1">
+                            <hc:Divider Content="点动(JOG)"></hc:Divider>
+                            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                                <Button hc:IconElement.Geometry="{StaticResource  RotateLeftGeometry}" Padding="10" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="90"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="90"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                                <Button hc:IconElement.Geometry="{StaticResource  RotateRightGeometry}" Padding="10" Width="50" Height="50" Margin="10,0">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseDown">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseDownCommand}" CommandParameter="91"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseUp">
+                                            <i:InvokeCommandAction Command="{Binding PreviewMouseUpCommand}" CommandParameter="91"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Grid.Row="2">
+                            <hc:Divider Content="速度"></hc:Divider>
+                            <Slider Width="200" hc:TipElement.Visibility="Visible" TickFrequency="5" hc:TipElement.Placement="Bottom" hc:TipElement.StringFormat="#0.0'%'" Maximum="100" Value="{Binding Axis9SpeedScale}" TickPlacement="Both"/>
+                        </StackPanel>
+
+                    </Grid>
+                </Border>
+                <Border Margin="1,0,0,0" BorderThickness="1" BorderBrush="Black" Grid.Column="1">
+                    <StackPanel Grid.Column="1" Orientation="Vertical">
+                        <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                            <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="60">轴4位置1</TextBlock>
+                            <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" Text="{Binding Axis9Pos1}"></TextBox>
+                            <Button Style="{StaticResource ButtonInfo}" Width="40" Content="get" Margin="1" Command="{Binding AxisPosGetButtonCommand}" CommandParameter="90"></Button>
+                            <Button Style="{StaticResource ButtonSuccess}" Width="40" Content="go" Margin="1" Command="{Binding AxisPosGoButtonCommand}" CommandParameter="90"></Button>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+
+            </Grid>
+        </GroupBox>
+    </Grid>
+</UserControl>

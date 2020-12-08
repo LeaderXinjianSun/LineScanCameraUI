@@ -31,10 +31,12 @@
         <Menu VerticalAlignment="Center">
             <MenuItem Header="主页" Command="{Binding MenuActionCommand}" CommandParameter="0"></MenuItem>
             <MenuItem Header="参数" Command="{Binding MenuActionCommand}" CommandParameter="1"></MenuItem>
+            <MenuItem Header="轴调试" Command="{Binding MenuActionCommand}" CommandParameter="2"></MenuItem>
         </Menu>
         <Grid Grid.Row="1">
             <View:HomePage Visibility="{Binding HomePageVisibility}"></View:HomePage>
             <View:ParameterPage Visibility="{Binding ParameterPageVisibility,FallbackValue=Collapsed}"></View:ParameterPage>
+            <View:JogPage Visibility="{Binding JogPageVisibility,FallbackValue=Collapsed}"></View:JogPage>
         </Grid>
         <StatusBar Grid.Row="2">
             <StatusBarItem Margin="1,0">
