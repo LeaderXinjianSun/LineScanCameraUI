@@ -8,6 +8,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using ViewROI;
 
 namespace LineScanCameraUI.ViewModel
@@ -327,6 +328,10 @@ namespace LineScanCameraUI.ViewModel
         #region 变量
         private string iniParameterPath = System.Environment.CurrentDirectory + "\\Parameter.ini";
         private SXJLibrary.MitsubishiPLCFx5u plc;
+        private int axis2MaxVal = 1000000;
+        private int axis3MaxVal = 50000;
+        private int axis4MaxVal = 50000;
+        private int axis9MaxVal = 50000;
         #endregion
         #region 构造函数
         public MainWindowViewModel()
@@ -342,14 +347,13 @@ namespace LineScanCameraUI.ViewModel
             PLCPort = int.Parse(DXH.Ini.DXHIni.ContentReader("PLC", "PORT", "502", iniParameterPath));
             plc = new SXJLibrary.MitsubishiPLCFx5u(PLCIP, PLCPort);
             plc.ConnectStateChanged += Plc_ConnectStateChanged;
-            Axis2Pos1 = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis2", "Axis2Pos1", "0", iniParameterPath));
-            Axis2Pos2 = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis2", "Axis2Pos2", "0", iniParameterPath));
+
             Axis2SpeedScale = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis2", "Axis2SpeedScale", "0", iniParameterPath));
-            Axis3Pos1 = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis3", "Axis3Pos1", "0", iniParameterPath));            
+          
             Axis3SpeedScale = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis3", "Axis3SpeedScale", "0", iniParameterPath));
-            Axis4Pos1 = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis4", "Axis4Pos1", "0", iniParameterPath));
+
             Axis4SpeedScale = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis4", "Axis4SpeedScale", "0", iniParameterPath));
-            Axis9Pos1 = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis9", "Axis9Pos1", "0", iniParameterPath));
+
             Axis9SpeedScale = double.Parse(DXH.Ini.DXHIni.ContentReader("Axis9", "Axis9SpeedScale", "0", iniParameterPath));
             #endregion
             #region 初始化方法
@@ -365,7 +369,7 @@ namespace LineScanCameraUI.ViewModel
             System.Diagnostics.Process[] myProcesses = System.Diagnostics.Process.GetProcessesByName("LineScanCameraUI");//获取指定的进程名   
             if (myProcesses.Length > 1) //如果可以获取到知道的进程名则说明已经启动
             {
-                MessageBox.Show("不允许重复打开软件", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                HandyControl.Controls.MessageBox.Show("不允许重复打开软件", "Error", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
                 System.Windows.Application.Current.Shutdown();
             }
             #endregion
@@ -375,6 +379,52 @@ namespace LineScanCameraUI.ViewModel
         {
             switch (obj.ToString())
             {
+                case "20":
+                    if (HandyControl.Controls.MessageBox.Show("你确定运动到点-轴2位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        plc.WriteW("D4040", (int)(Axis2Pos1 * 1000));
+                        DXH.Ini.DXHIni.WritePrivateProfileString("Axis2", "Axis2SpeedScale", Axis2SpeedScale.ToString("F1"), iniParameterPath);
+                        plc.WriteW("D4010", (int)((double)axis2MaxVal * 0.1 * Axis2SpeedScale / 100));
+                        plc.SetM("M411", true);
+
+                    }
+                    break;
+                case "21":
+                    if (HandyControl.Controls.MessageBox.Show("你确定运动到点-轴2位置2-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        plc.WriteW("D4040", (int)(Axis2Pos2 * 1000));
+                        DXH.Ini.DXHIni.WritePrivateProfileString("Axis2", "Axis2SpeedScale", Axis2SpeedScale.ToString("F1"), iniParameterPath);
+                        plc.WriteW("D4010", (int)((double)axis2MaxVal * 0.1 * Axis2SpeedScale / 100));
+                        plc.SetM("M411", true);
+                    }
+                    break;
+                case "30":
+                    if (HandyControl.Controls.MessageBox.Show("你确定运动到点-轴3位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        plc.WriteW("D4042", (int)(Axis3Pos1 * 200));
+                        DXH.Ini.DXHIni.WritePrivateProfileString("Axis3", "Axis3SpeedScale", Axis3SpeedScale.ToString("F1"), iniParameterPath);
+                        plc.WriteW("D4012", (int)((double)axis3MaxVal * 0.1 * Axis3SpeedScale / 100));
+                        plc.SetM("M412", true);
+                    }
+                    break;
+                case "40":
+                    if (HandyControl.Controls.MessageBox.Show("你确定运动到点-轴4位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        plc.WriteW("D4044", (int)(Axis4Pos1 * 200));
+                        DXH.Ini.DXHIni.WritePrivateProfileString("Axis4", "Axis4SpeedScale", Axis4SpeedScale.ToString("F1"), iniParameterPath);
+                        plc.WriteW("D4014", (int)((double)axis4MaxVal * 0.1 * Axis4SpeedScale / 100));
+                        plc.SetM("M413", true);
+                    }
+                    break;
+                case "90":
+                    if (HandyControl.Controls.MessageBox.Show("你确定运动到点-轴9位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        plc.WriteW("D4046", (int)(Axis9Pos1 /360 * 10000));
+                        DXH.Ini.DXHIni.WritePrivateProfileString("Axis9", "Axis9SpeedScale", Axis9SpeedScale.ToString("F1"), iniParameterPath);
+                        plc.WriteW("D4016", (int)((double)axis9MaxVal * 0.1 * Axis9SpeedScale / 100));
+                        plc.SetM("M414", true);
+                    }
+                    break;
                 default:
                     break;
             }
@@ -384,6 +434,41 @@ namespace LineScanCameraUI.ViewModel
         {
             switch (obj.ToString())
             {
+                case "20":
+                    if (HandyControl.Controls.MessageBox.Show("你确定示教点-轴2位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        Axis2Pos1 = GPos2;
+                        plc.WriteW("D4026", (int)(Axis2Pos1 * 1000));
+                    }
+                    break;
+                case "21":
+                    if (HandyControl.Controls.MessageBox.Show("你确定示教点-轴2位置2-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)                    
+                    {
+                        Axis2Pos2 = GPos2;
+                        plc.WriteW("D4028", (int)(Axis2Pos2 * 1000));
+                    }
+                    break;
+                case "30":
+                    if (HandyControl.Controls.MessageBox.Show("你确定示教点-轴3位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        Axis3Pos1 = GPos3;
+                        plc.WriteW("D4020", (int)(Axis3Pos1 * 200));
+                    }
+                    break;
+                case "40":
+                    if (HandyControl.Controls.MessageBox.Show("你确定示教点-轴4位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        Axis4Pos1 = GPos4;
+                        plc.WriteW("D4022", (int)(Axis4Pos1 * 200));
+                    }
+                    break;
+                case "90":
+                    if (HandyControl.Controls.MessageBox.Show("你确定示教点-轴9位置1-么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        Axis9Pos1 = GPos9;
+                        plc.WriteW("D4024", (int)(Axis9Pos1 / 360 * 10000));
+                    }
+                    break;
                 default:
                     break;
             }
@@ -393,6 +478,30 @@ namespace LineScanCameraUI.ViewModel
         {
             switch (obj.ToString())
             {
+                case "20":                    
+                    plc.SetM("M403", false);
+                    break;
+                case "21":                 
+                    plc.SetM("M404", false);
+                    break;
+                case "30":
+                    plc.SetM("M405", false);
+                    break;
+                case "31":
+                    plc.SetM("M406", false);
+                    break;
+                case "40":
+                    plc.SetM("M407", false);
+                    break;
+                case "41":
+                    plc.SetM("M408", false);
+                    break;
+                case "90":
+                    plc.SetM("M409", false);
+                    break;
+                case "91":
+                    plc.SetM("M410", false);
+                    break;
                 default:
                     break;
             }
@@ -402,6 +511,46 @@ namespace LineScanCameraUI.ViewModel
         {
             switch (obj.ToString())
             {
+                case "20":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis2", "Axis2SpeedScale", Axis2SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4010", (int)((double)axis2MaxVal * 0.1 * Axis2SpeedScale / 100));
+                    plc.SetM("M403", true);
+                    break;
+                case "21":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis2", "Axis2SpeedScale", Axis2SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4010", (int)((double)axis2MaxVal * 0.1 * Axis2SpeedScale / 100));
+                    plc.SetM("M404", true);
+                    break;
+                case "30":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis3", "Axis3SpeedScale", Axis3SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4012", (int)((double)axis3MaxVal * 0.1 * Axis3SpeedScale / 100));
+                    plc.SetM("M405", true);
+                    break;
+                case "31":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis3", "Axis3SpeedScale", Axis3SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4012", (int)((double)axis3MaxVal * 0.1 * Axis3SpeedScale / 100));
+                    plc.SetM("M406", true);
+                    break;
+                case "40":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis4", "Axis4SpeedScale", Axis4SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4014", (int)((double)axis4MaxVal * 0.1 * Axis4SpeedScale / 100));
+                    plc.SetM("M407", true);
+                    break;
+                case "41":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis4", "Axis4SpeedScale", Axis4SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4014", (int)((double)axis4MaxVal * 0.1 * Axis4SpeedScale / 100));
+                    plc.SetM("M408", true);
+                    break;
+                case "90":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis9", "Axis9SpeedScale", Axis9SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4016", (int)((double)axis9MaxVal * 0.1 * Axis9SpeedScale / 100));
+                    plc.SetM("M409", true);
+                    break;
+                case "91":
+                    DXH.Ini.DXHIni.WritePrivateProfileString("Axis9", "Axis9SpeedScale", Axis9SpeedScale.ToString("F1"), iniParameterPath);
+                    plc.WriteW("D4016", (int)((double)axis9MaxVal * 0.1 * Axis9SpeedScale / 100));
+                    plc.SetM("M410", true);
+                    break;
                 default:
                     break;
             }
@@ -418,6 +567,9 @@ namespace LineScanCameraUI.ViewModel
             {
                 case "0":
                     addMessage("待添加功能");
+                    break;
+                case "1":
+                    plc.SetM("M420", true);
                     break;
                 case "100":
                     DXH.Ini.DXHIni.WritePrivateProfileString("PLC", "IP", PLCIP, iniParameterPath);
@@ -444,6 +596,11 @@ namespace LineScanCameraUI.ViewModel
                     JogPageVisibility = "Collapsed";
                     break;
                 case "2":
+                    Axis2Pos1 = (double)plc.ReadW("D4026") / 1000;
+                    Axis2Pos2 = (double)plc.ReadW("D4028") / 1000;
+                    Axis3Pos1 = (double)plc.ReadW("D4020") / 200;
+                    Axis4Pos1 = (double)plc.ReadW("D4022") / 200;
+                    Axis9Pos1 = (double)plc.ReadW("D4024") / 10000 * 360;
                     HomePageVisibility = "Collapsed";
                     ParameterPageVisibility = "Collapsed";
                     JogPageVisibility = "Visible";
@@ -457,6 +614,7 @@ namespace LineScanCameraUI.ViewModel
         {
             //throw new NotImplementedException();
             plc.Start();
+            run();
             addMessage("软件加载完成");
         }
         #endregion
@@ -473,6 +631,30 @@ namespace LineScanCameraUI.ViewModel
                 MessageStr += "\n";
             }
             MessageStr += System.DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " " + str;
+        }
+        private async void run()
+        {
+            while (true)
+            {
+                try
+                {
+                    #region 读取坐标
+                    await Task.Run(() =>
+                    {
+                        GPos2 = (double)plc.ReadW("D100") / 1000;
+                        GPos3 = (double)plc.ReadW("D102") / 200;
+                        GPos4 = (double)plc.ReadW("D104") / 200;
+                        GPos9 = (double)plc.ReadW("D106") / 10000 * 360;
+                    });
+                    #endregion
+
+                }
+                catch 
+                {
+
+                }
+                await Task.Delay(100);
+            }
         }
         #endregion
     }

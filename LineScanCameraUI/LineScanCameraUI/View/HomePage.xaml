@@ -38,6 +38,7 @@
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
                     <Button Style="{StaticResource ButtonPrimary}" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="22" Content="功能" Height="Auto" Margin="5" Command="{Binding OperateButtonCommand}" CommandParameter="0"/>
+                    <Button Style="{StaticResource ButtonWarning}" Grid.Column="3" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" FontSize="22" Content="消音" Height="Auto" Margin="5" Command="{Binding OperateButtonCommand}" CommandParameter="1"/>
                 </Grid>
             </GroupBox>
             <GroupBox Grid.Row="1" Header="数据面板"></GroupBox>

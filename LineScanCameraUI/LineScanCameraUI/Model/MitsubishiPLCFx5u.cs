@@ -35,7 +35,24 @@ namespace SXJLibrary
 
         public bool ReadM(string address)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int _add = int.Parse(address.Substring(1,address.Length - 1)) + +8192;
+                int[] values = Fx5u.ModbusRead(1, 1, _add);
+                if (values != null)
+                {
+                    return values[0] == 1;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            catch                
+            {
+                return false;
+            }
+            
         }
 
         public bool[] ReadMultiM(string address, ushort length)
@@ -50,12 +67,38 @@ namespace SXJLibrary
 
         public int ReadW(string address)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int _add = int.Parse(address.Substring(1, address.Length - 1));
+                int[] values = Fx5u.ModbusRead(1, 3, _add, 2);
+                if (values != null)
+                {
+                    return Convert.ToInt32(values[1].ToString("X4") + values[0].ToString("X4"), 16);
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+            catch 
+            {
+                return 0;
+            }
         }
 
         public void SetM(string address, bool value)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int _add = int.Parse(address.Substring(1, address.Length - 1)) + 8192;
+                int[] _values = new int[1];
+                _values[0] = value ? 1 : 0;
+                Fx5u.ModbusWrite(1, 15, _add, _values);
+            }
+            catch 
+            {
+
+            }
         }
 
         public void SetMultiM(string address, bool[] value)
@@ -80,7 +123,18 @@ namespace SXJLibrary
 
         public void WriteW(string address, int value)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int _add = int.Parse(address.Substring(1, address.Length - 1));
+                int[] _values = new int[2];
+                _values[1] = Convert.ToInt32(value.ToString("X8").Substring(0, 4), 16);
+                _values[0] = Convert.ToInt32(value.ToString("X8").Substring(4, 4), 16);
+                Fx5u.ModbusWrite(1, 16, _add, _values);
+            }
+            catch
+            {
+
+            }
         }
     }
 }
