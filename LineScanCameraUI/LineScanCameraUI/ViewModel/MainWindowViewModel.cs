@@ -2,6 +2,7 @@
 using HandyControl.Controls;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.ViewModel;
+using SXJLibrary;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -314,6 +315,17 @@ namespace LineScanCameraUI.ViewModel
                 this.RaisePropertyChanged("GPos9");
             }
         }
+        private string pLCModeSate;
+
+        public string PLCModeSate
+        {
+            get { return pLCModeSate; }
+            set
+            {
+                pLCModeSate = value;
+                this.RaisePropertyChanged("PLCModeSate");
+            }
+        }
 
         #endregion
         #region 方法绑定
@@ -327,7 +339,7 @@ namespace LineScanCameraUI.ViewModel
         #endregion
         #region 变量
         private string iniParameterPath = System.Environment.CurrentDirectory + "\\Parameter.ini";
-        private SXJLibrary.MitsubishiPLCFx5u plc;
+        private SXJLibrary.MitsubishiPLCFx5u plc; CameraOperate cam1 = new CameraOperate();
         private int axis2MaxVal = 1000000;
         private int axis3MaxVal = 50000;
         private int axis4MaxVal = 50000;
@@ -502,6 +514,9 @@ namespace LineScanCameraUI.ViewModel
                 case "91":
                     plc.SetM("M410", false);
                     break;
+                case "100":
+                    plc.SetM("M400", false);
+                    break;
                 default:
                     break;
             }
@@ -550,6 +565,9 @@ namespace LineScanCameraUI.ViewModel
                     DXH.Ini.DXHIni.WritePrivateProfileString("Axis9", "Axis9SpeedScale", Axis9SpeedScale.ToString("F1"), iniParameterPath);
                     plc.WriteW("D4016", (int)((double)axis9MaxVal * 0.1 * Axis9SpeedScale / 100));
                     plc.SetM("M410", true);
+                    break;
+                case "100":
+                    plc.SetM("M400", true);
                     break;
                 default:
                     break;
@@ -614,8 +632,17 @@ namespace LineScanCameraUI.ViewModel
         {
             //throw new NotImplementedException();
             plc.Start();
+            bool rst = cam1.OpenCamera("CAM01", "GigEVision");
+            if (rst)
+            {
+                addMessage("相机打开成功");
+            }
+            else
+            {
+                addMessage("相机打开失败");
+            }
             run();
-            addMessage("软件加载完成");
+            
         }
         #endregion
         #region 自定义函数
@@ -634,6 +661,7 @@ namespace LineScanCameraUI.ViewModel
         }
         private async void run()
         {
+            bool m3000 = false, m3001 = false, m3002 = false, m3003 = false, m3004 = false, m3005 = false, m3006 = false;
             while (true)
             {
                 try
@@ -647,12 +675,97 @@ namespace LineScanCameraUI.ViewModel
                         GPos9 = (double)plc.ReadW("D106") / 10000 * 360;
                     });
                     #endregion
+                    #region 读信息
+                    bool[] M3000 = await Task.Run<bool[]>(() =>
+                    {
+                        return plc.ReadMultiM("M3000", 16);
+                    });
 
+                    if (M3000 != null)
+                    {
+                        if (m3000 != M3000[0])
+                        {
+                            if (M3000[0])
+                            {
+                                PLCModeSate = "S0初始化流程";
+                            }
+                            m3000 = M3000[0];
+                        }
+                        if (m3001 != M3000[1])
+                        {
+                            if (M3000[1])
+                            {
+                                PLCModeSate = "S10模式选择流程";
+                            }
+                            m3001 = M3000[1];
+                        }
+                        if (m3002 != M3000[2])
+                        {
+                            if (M3000[2])
+                            {
+                                PLCModeSate = "S11运行流程";
+                            }
+                            m3002 = M3000[2];
+                        }
+                        if (m3003 != M3000[3])
+                        {
+                            if (M3000[3])
+                            {
+                                PLCModeSate = "S50调试流程";
+                            }
+                            m3003 = M3000[3];
+                        }
+                        if (m3004 != M3000[4])
+                        {
+                            if (M3000[4])
+                            {
+                                PLCModeSate = "S99急停流程";
+                            }
+                            m3004 = M3000[4];
+                        }
+                        if (m3005 != M3000[5])
+                        {
+                            if (M3000[5])
+                            {
+                                addMessage("暂停");
+                            }
+                            m3005 = M3000[5];
+                        }
+                        if (m3006 != M3000[6])
+                        {
+                            if (M3000[6])
+                            {
+                                addMessage("等待按“复位”按钮");
+                            }
+                            m3006 = M3000[6];
+                        }
+                    }
+
+                    #endregion
+                    #region 运行
+                    bool m401 = await Task.Run<bool>(()=> {
+                        return plc.ReadM("M401");
+                    });
+                    if (m401)
+                    {
+                        addMessage("触发拍照");
+                        await Task.Run(()=> {
+                            //cam1.GrabImageVoid(0,false,false);
+                            //CameraIamge = cam1.CurrentImage;
+                            plc.SetM("M401", false);
+                            plc.SetM("M402", true);
+                        });
+                    }
+                    #endregion
+                  
                 }
                 catch 
                 {
 
                 }
+                #region 更新状态
+                StatusCamera = cam1.Connected;
+                #endregion
                 await Task.Delay(100);
             }
         }

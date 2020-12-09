@@ -105,6 +105,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\CameraOperate.cs" />
     <Compile Include="Model\IPLCCommunication.cs" />
     <Compile Include="Model\MitsubishiPLCFx5u.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />

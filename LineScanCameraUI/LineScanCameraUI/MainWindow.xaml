@@ -51,6 +51,9 @@
                     <Ellipse Style="{StaticResource EllipseStatusPLC}"></Ellipse>
                 </StackPanel>
             </StatusBarItem>
+            <StatusBarItem HorizontalAlignment="Right">
+                <TextBlock Style="{StaticResource TextBlockDefault}" Text="{Binding PLCModeSate}"></TextBlock>
+            </StatusBarItem>
         </StatusBar>
     </Grid>
 </hc:Window>

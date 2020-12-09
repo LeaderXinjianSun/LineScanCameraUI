@@ -57,7 +57,29 @@ namespace SXJLibrary
 
         public bool[] ReadMultiM(string address, ushort length)
         {
-            throw new NotImplementedException();
+            try
+            {
+                int _add = int.Parse(address.Substring(1, address.Length - 1)) + +8192;
+                int[] values = Fx5u.ModbusRead(1, 1, _add,length);
+                
+                if (values != null)
+                {
+                    bool[] rst = new bool[values.Length];
+                    for (int i = 0; i < values.Length; i++)
+                    {
+                        rst[i] = values[i] == 1;
+                    }
+                    return rst;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         public int[] ReadMultiW(string address, ushort length)
