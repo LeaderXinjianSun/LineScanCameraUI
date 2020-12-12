@@ -326,6 +326,17 @@ namespace LineScanCameraUI.ViewModel
                 this.RaisePropertyChanged("PLCModeSate");
             }
         }
+        private int axis2Speed;
+
+        public int Axis2Speed
+        {
+            get { return axis2Speed; }
+            set
+            {
+                axis2Speed = value;
+                this.RaisePropertyChanged("Axis2Speed");
+            }
+        }
 
         #endregion
         #region 方法绑定
@@ -336,6 +347,7 @@ namespace LineScanCameraUI.ViewModel
         public DelegateCommand<object> PreviewMouseUpCommand { get; set; }
         public DelegateCommand<object> AxisPosGetButtonCommand { get; set; }
         public DelegateCommand<object> AxisPosGoButtonCommand { get; set; }
+        public DelegateCommand<object> AxisSetButtonCommand { get; set; }
         #endregion
         #region 变量
         private string iniParameterPath = System.Environment.CurrentDirectory + "\\Parameter.ini";
@@ -376,6 +388,7 @@ namespace LineScanCameraUI.ViewModel
             PreviewMouseUpCommand = new DelegateCommand<object>(new Action<object>(this.PreviewMouseUpCommandExecute));
             AxisPosGetButtonCommand = new DelegateCommand<object>(new Action<object>(this.AxisPosGetButtonCommandExecute));
             AxisPosGoButtonCommand = new DelegateCommand<object>(new Action<object>(this.AxisPosGoButtonCommandExecute));
+            AxisSetButtonCommand = new DelegateCommand<object>(new Action<object>(this.AxisSetButtonCommandExecute));
             #endregion
             #region 启动条件
             System.Diagnostics.Process[] myProcesses = System.Diagnostics.Process.GetProcessesByName("LineScanCameraUI");//获取指定的进程名   
@@ -385,6 +398,21 @@ namespace LineScanCameraUI.ViewModel
                 System.Windows.Application.Current.Shutdown();
             }
             #endregion
+        }
+
+        private void AxisSetButtonCommandExecute(object obj)
+        {
+            switch (obj.ToString())
+            {
+                case "20":
+                    if (HandyControl.Controls.MessageBox.Show("你确定设置轴2运行速度么？", "确认", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes)
+                    {
+                        plc.WriteW("D4000", Axis2Speed);
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void AxisPosGoButtonCommandExecute(object obj)
@@ -619,6 +647,7 @@ namespace LineScanCameraUI.ViewModel
                     Axis3Pos1 = (double)plc.ReadW("D4020") / 200;
                     Axis4Pos1 = (double)plc.ReadW("D4022") / 200;
                     Axis9Pos1 = (double)plc.ReadW("D4024") / 10000 * 360;
+                    Axis2Speed = plc.ReadW("D4000");
                     HomePageVisibility = "Collapsed";
                     ParameterPageVisibility = "Collapsed";
                     JogPageVisibility = "Visible";
@@ -750,11 +779,14 @@ namespace LineScanCameraUI.ViewModel
                     {
                         addMessage("触发拍照");
                         await Task.Run(()=> {
-                            //cam1.GrabImageVoid(0,false,false);
-                            //CameraIamge = cam1.CurrentImage;
+                            
                             plc.SetM("M401", false);
                             plc.SetM("M402", true);
+                            cam1.GrabImageVoid(0, false, false);
+                            
                         });
+                        CameraIamge = cam1.CurrentImage;
+                        addMessage("拍照完成");
                     }
                     #endregion
                   

@@ -84,7 +84,13 @@
                                 <Button Style="{StaticResource ButtonInfo}" Width="40" Content="get" Margin="1" Command="{Binding AxisPosGetButtonCommand}" CommandParameter="21"></Button>
                                 <Button Style="{StaticResource ButtonSuccess}" Width="40" Content="go" Margin="1" Command="{Binding AxisPosGoButtonCommand}" CommandParameter="21"></Button>
                             </StackPanel>
-                            
+                            <StackPanel Orientation="Horizontal" Margin="10,0,0,0">
+                                <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="60">运行频率</TextBlock>
+                                <TextBox VerticalAlignment="Center" VerticalContentAlignment="Center" Width="60" Text="{Binding Axis2Speed}"></TextBox>
+                                <TextBlock Style="{StaticResource TextBlockDefault}" VerticalAlignment="Center" Width="26">Hz</TextBlock>
+                                <Button Style="{StaticResource  ButtonWarning}" Width="40" Content="set" Margin="1" Command="{Binding AxisSetButtonCommand}" CommandParameter="20"></Button>
+                                
+                            </StackPanel>
                         </StackPanel>
                         <Button Grid.Row="1" Height="70" FontSize="22" Background="Gainsboro" Width="70" Padding="5,0" Content="调试" Style="{StaticResource ButtonCustom}" hc:BorderElement.CornerRadius="5" hc:BackgroundSwitchElement.MouseHoverBackground="Orange" hc:BackgroundSwitchElement.MouseDownBackground="Yellow">
                             <i:Interaction.Triggers>
