@@ -16,7 +16,15 @@
             <ColumnDefinition  Width="2*"></ColumnDefinition>
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <halconviewer:ImageViewer Name="CameraImageViewer" Visibility="{Binding HalconWindowVisibility}" Image="{Binding CameraIamge}" Repaint="{Binding CameraRepaint}" AutoRepaint="True" ROIList="{Binding CameraROIList}" AppendHObject="{Binding CameraAppendHObject}" GCStyle="{Binding CameraGCStyle}" Margin="1"></halconviewer:ImageViewer>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <halconviewer:ImageViewer Name="CameraImageViewer" Visibility="{Binding HalconWindowVisibility}" Image="{Binding CameraIamge}" Repaint="{Binding CameraRepaint}" AutoRepaint="True" ROIList="{Binding CameraROIList}" AppendHObject="{Binding CameraAppendHObject}" GCStyle="{Binding CameraGCStyle}" Margin="1"></halconviewer:ImageViewer>
+            <halconviewer:ImageViewer Name="CameraImageViewer2" Grid.Column="1" Visibility="{Binding HalconWindowVisibility}" Image="{Binding CameraIamge2}" Repaint="{Binding CameraRepaint2}" AutoRepaint="True" ROIList="{Binding CameraROIList2}" AppendHObject="{Binding CameraAppendHObject2}" GCStyle="{Binding CameraGCStyle2}" Margin="1"></halconviewer:ImageViewer>
+        </Grid>
+        
         <TextBox Grid.Row="1" VerticalAlignment="Stretch" VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Margin="1" x:Name="MsgTextBox" IsReadOnly="True" TextChanged="MsgTextBox_TextChanged"  FontSize="14" Background="Black" FontFamily="宋体" Foreground="White" AcceptsReturn="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" Text="{Binding MessageStr}"></TextBox>
         <Grid Grid.Column="1" Grid.RowSpan="2">
             <Grid.RowDefinitions>

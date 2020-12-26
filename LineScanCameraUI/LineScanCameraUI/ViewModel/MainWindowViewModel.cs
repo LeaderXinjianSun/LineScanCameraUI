@@ -150,6 +150,61 @@ namespace LineScanCameraUI.ViewModel
                 this.RaisePropertyChanged("CameraGCStyle");
             }
         }
+        private HImage cameraIamge2;
+
+        public HImage CameraIamge2
+        {
+            get { return cameraIamge2; }
+            set
+            {
+                cameraIamge2 = value;
+                this.RaisePropertyChanged("CameraIamge2");
+            }
+        }
+        private bool cameraRepaint2;
+
+        public bool CameraRepaint2
+        {
+            get { return cameraRepaint2; }
+            set
+            {
+                cameraRepaint2 = value;
+                this.RaisePropertyChanged("CameraRepaint2");
+            }
+        }
+        private ObservableCollection<ROI> cameraROIList2;
+
+        public ObservableCollection<ROI> CameraROIList2
+        {
+            get { return cameraROIList2; }
+            set
+            {
+                cameraROIList2 = value;
+                this.RaisePropertyChanged("CameraROIList2");
+            }
+        }
+        private HObject cameraAppendHObject2;
+
+        public HObject CameraAppendHObject2
+        {
+            get { return cameraAppendHObject2; }
+            set
+            {
+                cameraAppendHObject2 = value;
+                this.RaisePropertyChanged("CameraAppendHObject2");
+            }
+        }
+        private Tuple<string, object> cameraGCStyle2;
+
+        public Tuple<string, object> CameraGCStyle2
+        {
+            get { return cameraGCStyle2; }
+            set
+            {
+                cameraGCStyle2 = value;
+                this.RaisePropertyChanged("CameraGCStyle2");
+            }
+        }
         private string pLCIP;
 
         public string PLCIP
@@ -361,12 +416,13 @@ namespace LineScanCameraUI.ViewModel
         public MainWindowViewModel()
         {
             #region 初始化参数
-            Version = "20201207";
+            Version = "20201226";
             MessageStr = "";
             HomePageVisibility = "Visible";
             ParameterPageVisibility = "Collapsed";
             JogPageVisibility = "Collapsed";
             CameraROIList = new ObservableCollection<ROI>();
+            CameraROIList2 = new ObservableCollection<ROI>();
             PLCIP = DXH.Ini.DXHIni.ContentReader("PLC", "IP", "192.168.3.250", iniParameterPath);
             PLCPort = int.Parse(DXH.Ini.DXHIni.ContentReader("PLC", "PORT", "502", iniParameterPath));
             plc = new SXJLibrary.MitsubishiPLCFx5u(PLCIP, PLCPort);
@@ -788,8 +844,24 @@ namespace LineScanCameraUI.ViewModel
                         CameraIamge = cam1.CurrentImage;
                         addMessage("拍照完成");
                     }
-                    #endregion
-                  
+
+                    bool m431 = await Task.Run<bool>(() => {
+                        return plc.ReadM("M431");
+                    });
+                    if (m431)
+                    {
+                        addMessage("触发拍照2");
+                        await Task.Run(() => {
+
+                            plc.SetM("M431", false);
+                            plc.SetM("M432", true);
+                            cam1.GrabImageVoid(0, false, false);
+
+                        });
+                        CameraIamge2 = cam1.CurrentImage;
+                        addMessage("拍照完成2");
+                    }
+                    #endregion                  
                 }
                 catch 
                 {
