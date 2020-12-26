@@ -838,6 +838,7 @@ namespace LineScanCameraUI.ViewModel
                             
                             plc.SetM("M401", false);
                             plc.SetM("M402", true);
+                            cam1.SetRotaryEncoderDirection(true);                            
                             cam1.GrabImageVoid(0, false, false);
                             
                         });
@@ -855,6 +856,7 @@ namespace LineScanCameraUI.ViewModel
 
                             plc.SetM("M431", false);
                             plc.SetM("M432", true);
+                            cam1.SetRotaryEncoderDirection(false);
                             cam1.GrabImageVoid(0, false, false);
 
                         });

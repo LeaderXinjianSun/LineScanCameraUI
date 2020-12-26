@@ -218,5 +218,24 @@ namespace SXJLibrary
 
             return false;
         }
+        public bool SetRotaryEncoderDirection(bool dir)
+        {
+            try
+            {
+                if (dir)
+                {
+                    Framegrabber.SetFramegrabberParam("rotaryEncoderDirection", "CounterClockwise");
+                }
+                else
+                {
+                    Framegrabber.SetFramegrabberParam("rotaryEncoderDirection", "Clockwise");
+                }
+                return true;
+            }
+            catch 
+            {
+                return false;
+            }
+        }
     }
 }
